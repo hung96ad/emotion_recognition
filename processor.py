@@ -4,6 +4,7 @@ import logging
 
 import cv2
 from keras.models import load_model
+from keras.backend import clear_session
 import numpy as np
 
 from utils.datasets import get_labels
@@ -16,7 +17,7 @@ from utils.inference import load_image
 from utils.preprocessor import preprocess_input
 
 def process_image(image):
-
+    clear_session()
     try:
         # parameters for loading data and images
         detection_model_path = './trained_models/detection_models/haarcascade_frontalface_default.xml'

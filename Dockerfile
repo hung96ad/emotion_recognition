@@ -7,6 +7,7 @@ ADD . /face_classifier
 WORKDIR face_classifier
 
 RUN pip3 install -r requirements.txt
+
 ENV PYTHONPATH=$PYTHONPATH:src
 ENV FACE_CLASSIFIER_PORT=8084
 EXPOSE $FACE_CLASSIFIER_PORT
