@@ -16,6 +16,7 @@ from utils.inference import load_image
 from utils.preprocessor import preprocess_input
 
 def process_image(image):
+
     try:
         # parameters for loading data and images
         detection_model_path = './trained_models/detection_models/haarcascade_frontalface_default.xml'
@@ -38,12 +39,15 @@ def process_image(image):
         image_array = np.fromstring(image, np.uint8)
         unchanged_image = cv2.imdecode(image_array, cv2.IMREAD_UNCHANGED)
 
+        rgb_image = cv2.cvtColor(unchanged_image, cv2.COLOR_BGR2RGB)
         gray_image = cv2.cvtColor(unchanged_image, cv2.COLOR_BGR2GRAY)
 
         faces = detect_faces(face_detection, gray_image)
         for face_coordinates in faces:
+
             x1, x2, y1, y2 = apply_offsets(face_coordinates, emotion_offsets)
             gray_face = gray_image[y1:y2, x1:x2]
+
             try:
                 gray_face = cv2.resize(gray_face, (emotion_target_size))
             except:
@@ -57,16 +61,16 @@ def process_image(image):
 
             color = (255, 0, 0)
 
-            draw_bounding_box(face_coordinates, gray_face, color)
-            draw_text(face_coordinates, gray_face, emotion_text, color, 0, -50, 1, 2)
+            draw_bounding_box(face_coordinates, rgb_image, color)
+            draw_text(face_coordinates, rgb_image, emotion_text, color, 0, -50, 1, 2)
     except Exception as err:
         logging.error('Error in emotion processor: "{0}"'.format(err))
 
-    bgr_image = cv2.cvtColor(gray_face, cv2.COLOR_RGB2BGR)
+    bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
 
     dirname = 'result'
     if not os.path.exists(dirname):
         os.mkdir(dirname)
 
     cv2.imwrite(os.path.join(dirname, 'predicted_image.png'), bgr_image)
-    return "predicted_image"
+    return 'predicted_image'
