@@ -8,7 +8,7 @@ app = Flask(__name__)
 def index():
     return redirect("http://tradersupport.club", code=302)
 
-@app.route('/classifyImage', methods=['POST'])
+@app.route('/emotionRecognition', methods=['POST'])
 def upload():
     try:
         image = request.files['image'].read()

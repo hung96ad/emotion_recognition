@@ -13,4 +13,4 @@ ENV FACE_CLASSIFIER_PORT=8084
 EXPOSE $FACE_CLASSIFIER_PORT
 
 ENTRYPOINT ["python3"]
-CMD ["faces.py"]
+CMD ["emotion_recognition.py"]
