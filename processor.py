@@ -36,7 +36,6 @@ def process_image(image):
     for face_coordinates in faces:
         x1, x2, y1, y2 = apply_offsets(face_coordinates, emotion_offsets)
         gray_face = gray_image[y1:y2, x1:x2]
-
         try:
             gray_face = cv2.resize(gray_face, (emotion_target_size))
         except:
@@ -49,4 +48,8 @@ def process_image(image):
             emotion_label_arg = np.argmax(emotion_classifier.predict(gray_face))
             emotion_text = emotion_labels[emotion_label_arg]
         results.append(emotion_text)
-    return results
+    dic_result = {
+        "emotions": results,
+        "number face": len(faces) 
+    }
+    return dic_result
