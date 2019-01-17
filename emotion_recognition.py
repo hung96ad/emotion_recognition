@@ -14,7 +14,7 @@ def upload():
     try:
         data = request.data
         data = data.decode('utf8')
-        data = json.load(data)
+        data = json.loads(data)
         image = base64.b64decode(data['image'])
         emotions = process_image(image)
         return make_response(jsonify({'result': emotions}), 200)
