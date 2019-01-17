@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, make_response, request, abort, redirect, send_file
+from flask import Flask, jsonify, make_response, request, abort, redirect
 import logging
-
-from processor import process_image 
+import base64
+import json
+from processor import process_image
 app = Flask(__name__)
 
 @app.route('/')
@@ -11,9 +12,12 @@ def index():
 @app.route('/emotionRecognition', methods=['POST'])
 def upload():
     try:
-        image = request.files['image'].read()
-        file_name = process_image(image)
-        return send_file('result/%s.png'%file_name, mimetype='image/png')
+        data = request.data
+        data = data.decode('utf8')
+        data = json.load(data)
+        image = base64.b64decode(data['image'])
+        emotions = process_image(image)
+        return make_response(jsonify({'result': emotions}), 200)
     except Exception as err:
         logging.error('An error has occurred whilst processing the file: "{0}"'.format(err))
         abort(400)
